@@ -110,7 +110,7 @@ pub async fn create_channel(
         None,
         None,
         &user_id,
-        &[other_id.clone()],
+        std::slice::from_ref(other_id),
       )
       .await
       .map_err(AppError::from)?;
