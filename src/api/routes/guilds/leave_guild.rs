@@ -27,7 +27,7 @@ pub async fn remove_guild(
     return Err(AppError::forbidden("GUILD_OWNER"));
   }
 
-  postgres_leave_guild(postgres, &guild_id, &user_id)
+  postgres_leave_guild(postgres, guild_id, &user_id)
     .await
     .map_err(AppError::from)?;
 

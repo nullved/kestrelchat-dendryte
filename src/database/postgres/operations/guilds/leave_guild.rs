@@ -12,7 +12,7 @@ pub async fn leave_guild(
         WHERE guild_id = $1, user_id = $2
         "#,
   )
-  .bind(&guild_id)
+  .bind(guild_id)
   .bind(user_id)
   .execute(postgres.pool())
   .await

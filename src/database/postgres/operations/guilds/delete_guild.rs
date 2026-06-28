@@ -29,7 +29,7 @@ pub async fn delete_guild(
         WHERE guild_id = $1
         "#,
   )
-  .bind(&guild_id)
+  .bind(guild_id)
   .execute(postgres.pool())
   .await
   .map_err(DatabaseError::from_sqlx)?

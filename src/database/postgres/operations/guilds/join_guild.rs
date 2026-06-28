@@ -18,7 +18,7 @@ pub async fn join_guild(
         RETURNING guild_id, user_id, joined_at
         "#,
   )
-  .bind(&guild_id)
+  .bind(guild_id)
   .bind(user_id)
   .bind(now)
   .fetch_one(postgres.pool())
