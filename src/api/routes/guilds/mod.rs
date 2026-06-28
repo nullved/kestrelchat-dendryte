@@ -5,6 +5,8 @@ pub mod create_guild;
 pub mod delete_guild;
 pub mod get_guild;
 pub mod update_guild;
+pub mod join_guild;
+pub mod leave_guild;
 
 pub fn routes() -> (Vec<Route>, OpenApi) {
   openapi_get_routes_spec![
@@ -12,5 +14,7 @@ pub fn routes() -> (Vec<Route>, OpenApi) {
     get_guild::get_guild,
     update_guild::update_guild,
     delete_guild::delete_guild,
+    join_guild::join_guild,
+    leave_guild::remove_guild
   ]
 }

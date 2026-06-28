@@ -1,29 +1,27 @@
 use crate::database::postgres::connection::Database;
 use crate::database::postgres::error::DatabaseError;
-use chrono::Utc;
-use sqlx::query_as;
-use crate::models::GuildMember;
 
-pub async fn join_guild(
+pub async fn leave_guild(
     postgres: &Database,
     guild_id: &str,
     user_id: &str
-) -> Result<GuildMember, DatabaseError> {
-    let now = Utc::now();
-
-    let guild_member = query_as::<_, GuildMember>(
+) -> Result<(), DatabaseError> {
+    let rows = sqlx::query(
         r#"
-        INSERT INTO guild_members (guild_id, user_id, joined_at)
-        VALUES ($1, $2, $3)
-        RETURNING guild_id, user_id, joined_at
+        DELETE FROM guild_members
+        WHERE guild_id = $1, user_id = $2
         "#,
     )
     .bind(&guild_id)
     .bind(user_id)
-    .bind(now)
-    .fetch_one(postgres.pool())
+    .execute(postgres.pool())
     .await
-    .map_err(DatabaseError::from_sqlx)?;
+    .map_err(DatabaseError::from_sqlx)?
+    .rows_affected();
 
-    Ok(guild_member)
+    if rows == 0 {
+        return Err(DatabaseError::NotFound)
+    }
+
+    Ok(())
 }

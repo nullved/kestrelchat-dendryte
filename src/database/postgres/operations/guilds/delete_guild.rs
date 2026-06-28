@@ -22,5 +22,22 @@ pub async fn delete_guild(
     return Err(DatabaseError::NotFound);
   }
 
+  // Delete all the associated guild members as well just in case
+  let rows = query(
+    r#"
+        DELETE FROM guild_members
+        WHERE guild_id = $1
+        "#,
+  )
+  .bind(&guild_id)
+  .execute(postgres.pool())
+  .await
+  .map_err(DatabaseError::from_sqlx)?
+  .rows_affected();
+
+  if rows == 0 {
+    return Err(DatabaseError::NotFound);
+  }
+
   Ok(())
 }
