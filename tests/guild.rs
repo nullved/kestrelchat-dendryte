@@ -9,7 +9,7 @@ mod common;
 
 async fn create_guild(
   client: &Arc<TestClient>,
-  owner_auth_token: &String,
+  owner_auth_token: &str,
 ) -> String {
   let guild_name = "Testing Guild";
 
@@ -19,7 +19,7 @@ async fn create_guild(
   let client = client.clone();
   let res = client
     .post("/guilds")
-    .header(bearer_auth(&owner_auth_token))
+    .header(bearer_auth(owner_auth_token))
     .json(&body)
     .dispatch()
     .await;
@@ -36,13 +36,13 @@ async fn create_guild(
 async fn join_guild(
   client: &Arc<TestClient>,
   guild_id: &String,
-  member_auth_token: &String,
+  member_auth_token: &str,
 ) {
   let client = client.clone();
   let path = format!("/guilds/{guild_id}/join");
   let res = client
     .post(path.as_str())
-    .header(bearer_auth(&member_auth_token))
+    .header(bearer_auth(member_auth_token))
     .dispatch()
     .await;
   assert_eq!(res.status().class(), StatusClass::Success);
